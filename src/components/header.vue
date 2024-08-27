@@ -3,7 +3,7 @@
         <!-- 折叠按钮 -->
         <div class="header-left">
             <img class="logo" src="../assets/img/logo.svg" alt="" />
-            <div class="web-title">后台管理系统</div>
+            <div class="web-title">言聚后台管理</div>
             <div class="collapse-btn" @click="collapseChage">
                 <el-icon v-if="sidebar.collapse">
                     <Expand />
@@ -15,12 +15,12 @@
         </div>
         <div class="header-right">
             <div class="header-user-con">
-                <div class="btn-icon" @click="router.push('/theme')">
+                <!-- <div class="btn-icon" @click="router.push('/theme')">
                     <el-tooltip effect="dark" content="设置主题" placement="bottom">
                         <i class="el-icon-lx-skin"></i>
                     </el-tooltip>
-                </div>
-                <div class="btn-icon" @click="router.push('/ucenter')">
+                </div> -->
+                <!-- <div class="btn-icon" @click="router.push('/ucenter')">
                     <el-tooltip
                         effect="dark"
                         :content="message ? `有${message}条未读消息` : `消息中心`"
@@ -29,7 +29,7 @@
                         <i class="el-icon-lx-notice"></i>
                     </el-tooltip>
                     <span class="btn-bell-badge" v-if="message"></span>
-                </div>
+                </div> -->
                 <div class="btn-icon" @click="setFullScreen">
                     <el-tooltip effect="dark" content="全屏" placement="bottom">
                         <i class="el-icon-lx-full"></i>
@@ -47,13 +47,16 @@
                     </span>
                     <template #dropdown>
                         <el-dropdown-menu>
-                            <a href="https://github.com/lin-xin/vue-manage-system" target="_blank">
-                                <el-dropdown-item>项目仓库</el-dropdown-item>
+                            <a href="https://github.com/CQULeaf/Summer-Internship-Frontend-Repo" target="_blank">
+                                <el-dropdown-item>前端仓库</el-dropdown-item>
                             </a>
-                            <a href="https://lin-xin.gitee.io/example/vuems-doc/" target="_blank">
-                                <el-dropdown-item>官方文档</el-dropdown-item>
+                            <a href="https://github.com/CQULeaf/Summer-Internship-Backend-Repo" target="_blank">
+                                <el-dropdown-item>后端仓库</el-dropdown-item>
                             </a>
-                            <el-dropdown-item command="user">个人中心</el-dropdown-item>
+                            <a href="https://github.com/CQULeaf/Summer-Internship-Admin-Repo" target="_blank">
+                                <el-dropdown-item>后台仓库</el-dropdown-item>
+                            </a>
+                            <!-- <el-dropdown-item command="user">个人中心</el-dropdown-item> -->
                             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
                         </el-dropdown-menu>
                     </template>
@@ -66,10 +69,9 @@
 import { onMounted } from 'vue';
 import { useSidebarStore } from '../store/sidebar';
 import { useRouter } from 'vue-router';
-import imgurl from '../assets/img/img.jpg';
+import imgurl from '../assets/img/Avatar.jpg';
 
 const username: string | null = localStorage.getItem('vuems_name');
-const message: number = 2;
 
 const sidebar = useSidebarStore();
 // 侧边栏折叠
