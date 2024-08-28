@@ -45,9 +45,9 @@ const handleSearch = () => {
 // 表格相关
 let columns = ref([
     { type: 'index', label: '序号', width: 55, align: 'center' },
-    { prop: 'name', label: '用户名' },
-    { prop: 'phone', label: '手机号' },
-    { prop: 'role', label: '角色' },
+    { prop: 'username', label: '用户名' },
+    { prop: 'phoneNumber', label: '手机号' },
+    { prop: 'major', label: '专业' },
     { prop: 'operator', label: '操作', width: 250 },
 ])
 const page = reactive({
@@ -58,7 +58,7 @@ const page = reactive({
 const tableData = ref<User[]>([]);
 const getData = async () => {
     const res = await fetchUserData()
-    tableData.value = res.data.list;
+    tableData.value = res.data.data;
     page.total = res.data.pageTotal;
 };
 getData();
@@ -73,11 +73,11 @@ let options = ref<FormOption>({
     labelWidth: '100px',
     span: 12,
     list: [
-        { type: 'input', label: '用户名', prop: 'name', required: true },
-        { type: 'input', label: '手机号', prop: 'phone', required: true },
+        { type: 'input', label: '用户名', prop: 'username', required: true },
+        { type: 'input', label: '手机号', prop: 'phoneNumber', required: true },
         { type: 'input', label: '密码', prop: 'password', required: true },
         { type: 'input', label: '邮箱', prop: 'email', required: true },
-        { type: 'input', label: '角色', prop: 'role', required: true },
+        { type: 'input', label: '专业', prop: 'major', required: true },
     ]
 })
 const visible = ref(false);
@@ -108,11 +108,11 @@ const handleView = (row: User) => {
     viewData.value.row = { ...row }
     viewData.value.list = [
         {
-            prop: 'id',
+            prop: 'userId',
             label: '用户ID',
         },
         {
-            prop: 'name',
+            prop: 'username',
             label: '用户名',
         },
         {
@@ -124,23 +124,43 @@ const handleView = (row: User) => {
             label: '邮箱',
         },
         {
-            prop: 'phone',
+            prop: 'phoneNumber',
             label: '电话',
         },
         {
-            prop: 'role',
-            label: '角色',
+            prop: 'major',
+            label: '专业',
         },
         {
-            prop: 'date',
+            prop: 'createdAt',
             label: '注册日期',
         },
+        {
+            prop: 'gender',
+            label: '性别',
+        },
+        {
+            prop: 'hometown',
+            label: '家乡',
+        },
+        {
+            prop: 'mbti',
+            label: 'mbti',
+        },
+        {
+            prop: 'nickname',
+            label: '昵称',
+        },
+        {
+            prop: 'bio',
+            label: '个人简介',
+        }
     ]
     visible1.value = true;
 };
 
 // 删除相关
-const handleDelete = (row: User) => {
+const handleDelete = (row: User) => { 
     ElMessage.success('删除成功');
 }
 </script>

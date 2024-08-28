@@ -2,48 +2,33 @@
     <div>
         <TableSearch :query="query" :options="searchOpt" :search="handleSearch" />
         <div class="container">
-
             <TableCustom :columns="columns" :tableData="tableData" :total="page.total" :viewFunc="handleView"
                 :delFunc="handleDelete" :page-change="changePage" :editFunc="handleEdit">
                 <template #toolbarBtn>
                     <el-button type="warning" :icon="CirclePlusFilled" @click="visible = true">新增</el-button>
                 </template>
-                <template #status="{ rows }">
-                    <el-tag type="success" v-if="rows.status">启用</el-tag>
-                    <el-tag type="danger" v-else>禁用</el-tag>
-                </template>
-                <template #permissions="{ rows }">
-                    <el-button type="primary" size="small" plain @click="handlePermission(rows)">管理</el-button>
-                </template>
             </TableCustom>
+
         </div>
         <el-dialog :title="isEdit ? '编辑' : '新增'" v-model="visible" width="700px" destroy-on-close
             :close-on-click-modal="false" @close="closeDialog">
             <TableEdit :form-data="rowData" :options="options" :edit="isEdit" :update="updateData" />
         </el-dialog>
         <el-dialog title="查看详情" v-model="visible1" width="700px" destroy-on-close>
-            <TableDetail :data="viewData">
-                <template #status="{ rows }">
-                    <el-tag type="success" v-if="rows.status">启用</el-tag>
-                    <el-tag type="danger" v-else>禁用</el-tag>
-                </template>
-            </TableDetail>
-        </el-dialog>
-        <el-dialog title="权限管理" v-model="visible2" width="500px" destroy-on-close>
-            <RolePermission :permiss-options="permissOptions" />
+            <TableDetail :data="viewData"></TableDetail>
         </el-dialog>
     </div>
 </template>
 
-<script setup lang="ts" name="system-role">
+<script setup lang="ts" name="system-user">
 import { ref, reactive } from 'vue';
 import { ElMessage } from 'element-plus';
-import { Role } from '@/types/role';
-import { fetchRoleData } from '@/api';
+import { CirclePlusFilled } from '@element-plus/icons-vue';
+import { Post } from '@/types/user';
+import { fetchPostData } from '@/api';
 import TableCustom from '@/components/table-custom.vue';
 import TableDetail from '@/components/table-detail.vue';
-import RolePermission from './role-permission.vue'
-import { CirclePlusFilled } from '@element-plus/icons-vue';
+import TableSearch from '@/components/table-search.vue';
 import { FormOption, FormOptionList } from '@/types/form-option';
 
 // 查询相关
@@ -51,7 +36,7 @@ const query = reactive({
     name: '',
 });
 const searchOpt = ref<FormOptionList[]>([
-    { type: 'input', label: '角色名称：', prop: 'name' }
+    { type: 'input', label: '帖子ID：', prop: 'postId' }
 ])
 const handleSearch = () => {
     changePage(1);
@@ -60,10 +45,9 @@ const handleSearch = () => {
 // 表格相关
 let columns = ref([
     { type: 'index', label: '序号', width: 55, align: 'center' },
-    { prop: 'name', label: '角色名称' },
-    { prop: 'key', label: '角色标识' },
-    { prop: 'status', label: '状态' },
-    { prop: 'permissions', label: '权限管理' },
+    { prop: 'postId', label: '帖子ID' },
+    { prop: 'userId', label: '发布者ID' },
+    { prop: 'createdAt', label: '发帖时间' },
     { prop: 'operator', label: '操作', width: 250 },
 ])
 const page = reactive({
@@ -71,32 +55,32 @@ const page = reactive({
     size: 10,
     total: 0,
 })
-const tableData = ref<Role[]>([]);
+const tableData = ref<Post[]>([]);
 const getData = async () => {
-    const res = await fetchRoleData()
-    tableData.value = res.data.list;
+    const res = await fetchPostData()
+    tableData.value = res.data.data;
     page.total = res.data.pageTotal;
 };
 getData();
+
 const changePage = (val: number) => {
     page.index = val;
     getData();
 };
 
 // 新增/编辑弹窗相关
-const options = ref<FormOption>({
+let options = ref<FormOption>({
     labelWidth: '100px',
-    span: 24,
+    span: 12,
     list: [
-        { type: 'input', label: '角色名称', prop: 'name', required: true },
-        { type: 'input', label: '角色标识', prop: 'key', required: true },
-        { type: 'switch', label: '状态', prop: 'status', required: false, activeText: '启用', inactiveText: '禁用' },
+        { type: 'input', label: '标题', prop: 'title', required: true },
+        { type: 'input', label: '内容', prop: 'postContent', required: true },
     ]
 })
 const visible = ref(false);
 const isEdit = ref(false);
 const rowData = ref({});
-const handleEdit = (row: Role) => {
+const handleEdit = (row: Post) => {
     rowData.value = { ...row };
     isEdit.value = true;
     visible.value = true;
@@ -105,57 +89,56 @@ const updateData = () => {
     closeDialog();
     getData();
 };
+
 const closeDialog = () => {
     visible.value = false;
     isEdit.value = false;
-    rowData.value = {};
 };
 
 // 查看详情弹窗相关
 const visible1 = ref(false);
 const viewData = ref({
     row: {},
-    list: [],
-    column: 1
+    list: []
 });
-const handleView = (row: Role) => {
+const handleView = (row: Post) => {
     viewData.value.row = { ...row }
     viewData.value.list = [
         {
-            prop: 'id',
-            label: '角色ID',
+            prop: 'postId',
+            label: '帖子ID',
         },
         {
-            prop: 'name',
-            label: '角色名称',
+            prop: 'userId',
+            label: '用户ID',
         },
         {
-            prop: 'key',
-            label: '角色标识',
+            prop: 'title',
+            label: '标题',
         },
         {
-            prop: 'status',
-            label: '角色状态',
+            prop: 'postContent',
+            label: '内容',
+        },
+        {
+            prop: 'createdAt',
+            label: '发帖时间',
+        },
+        {
+            prop: 'cover',
+            label: '图片',
+        },
+        {
+            prop: 'topicId',
+            label: '话题ID',
         },
     ]
     visible1.value = true;
 };
 
 // 删除相关
-const handleDelete = (row: Role) => {
+const handleDelete = (row: Post) => {
     ElMessage.success('删除成功');
-}
-
-
-// 权限管理弹窗相关
-const visible2 = ref(false);
-const permissOptions = ref({})
-const handlePermission = (row: Role) => {
-    visible2.value = true;
-    permissOptions.value = {
-        id: row.id,
-        permiss: row.permiss
-    };
 }
 </script>
 

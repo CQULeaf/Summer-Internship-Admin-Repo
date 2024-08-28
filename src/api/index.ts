@@ -9,7 +9,21 @@ export const fetchData = () => {
 
 export const fetchUserData = () => {
     return request({
-        url: './mock/user.json',
+        url: 'http://localhost:1234/user/all',
+        method: 'get'
+    });
+};
+
+export const fetchPostData = () => {
+    return request({
+        url: 'http://localhost:1234/ccPost/getAllPosts',
+        method: 'get'
+    });
+};
+
+export const fetchTopicData = () => {
+    return request({
+        url: 'http://localhost:1234/corner/topics',
         method: 'get'
     });
 };

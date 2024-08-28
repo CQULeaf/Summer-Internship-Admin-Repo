@@ -36,7 +36,7 @@ const routes: RouteRecordRaw[] = [
                 path: '/system-role',
                 name: 'system-role',
                 meta: {
-                    title: '角色管理',
+                    title: '帖子管理',
                     permiss: '12',
                 },
                 component: () => import(/* webpackChunkName: "system-role" */ '../views/system/role.vue'),
@@ -45,7 +45,7 @@ const routes: RouteRecordRaw[] = [
                 path: '/system-menu',
                 name: 'system-menu',
                 meta: {
-                    title: '菜单管理',
+                    title: '话题管理',
                     permiss: '13',
                 },
                 component: () => import(/* webpackChunkName: "system-menu" */ '../views/system/menu.vue'),
