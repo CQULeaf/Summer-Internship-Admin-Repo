@@ -129,8 +129,28 @@ const handleView = (row: Topic) => {
     visible1.value = true;
 };
 
+const deleteData = async (topicId: number) => {
+    try {
+        const response = await fetch(`http://localhost:1234/corner/deleteTopic/${topicId}`, {
+            method: 'DELETE',
+        });
+
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+
+        const result = await response.json();
+        getData();
+    } catch (error) {
+        ElMessage.error('删除请求失败');
+        console.error(error);
+    }
+};
+
+
 // 删除相关
 const handleDelete = (row: Topic) => {
+    deleteData(row.topicId);
     ElMessage.success('删除成功');
 }
 </script>
